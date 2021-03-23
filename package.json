@@ -7,6 +7,7 @@
     "url": "https://github.com/anncwb"
   },
   "scripts": {
+    "d": "./deploy.sh",
     "bootstrap": "yarn install",
     "serve": "npx --max_old_space_size=4096 vite",
     "dev": "npx --max_old_space_size=4096 vite",
