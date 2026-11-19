@@ -1,23 +1,27 @@
 name: CI
 
 on:
-  pull_request:
   push:
     branches:
       - main
       - 'releases/*'
+  workflow_dispatch:
 
 permissions:
   contents: read
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   CI: true
+  HUSKY: '0'
   TZ: Asia/Shanghai
 
 jobs:
   test:
     name: Test
-    if: github.repository == 'vbenjs/vue-vben-admin'
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -32,31 +36,14 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v6
-        with:
-          run_install: false
-
       - name: Setup Node
         uses: ./.github/actions/setup-node
-
-      # - name: Check Git version
-      #   run: git --version
-
-      # - name: Setup mock Git user
-      #   run: git config --global user.email "you@example.com" && git config --global user.name "Your Name"
 
       - name: Vitest tests
         run: pnpm run test:unit
 
-      # - name: Upload coverage
-      #   uses: codecov/codecov-action@v4
-      #   with:
-      #     token: ${{ secrets.CODECOV_TOKEN }}
-
   lint:
     name: Lint
-    if: github.repository == 'vbenjs/vue-vben-admin'
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -79,7 +66,6 @@ jobs:
 
   check:
     name: Check
-    if: github.repository == 'vbenjs/vue-vben-admin'
     runs-on: ${{ matrix.os }}
     timeout-minutes: 20
     strategy:
@@ -115,17 +101,38 @@ jobs:
           bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
           ./actionlint -color -shellcheck=""
 
+  # Merged from the former build.yml (which only ran on pull requests)
+  build:
+    name: Build
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          # - macos-latest
+          - windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Setup Node
+        uses: ./.github/actions/setup-node
+
+      - name: Build
+        run: pnpm run build
+
   ci-ok:
     name: CI OK
-    if: github.repository == 'vbenjs/vue-vben-admin'
     runs-on: ubuntu-latest
-    needs: [test, check, lint]
+    needs: [test, check, lint, build]
+    if: always()
     env:
-      FAILURE: ${{ contains(join(needs.*.result, ','), 'failure') }}
+      FAILURE: ${{ contains(join(needs.*.result, ','), 'failure') || contains(join(needs.*.result, ','), 'cancelled') }}
     steps:
       - name: Check for failure
         run: |
-          echo $FAILURE
+          echo "$FAILURE"
           if [ "$FAILURE" = "false" ]; then
             exit 0
           else

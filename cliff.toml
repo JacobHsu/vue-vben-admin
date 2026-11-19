@@ -1,0 +1,49 @@
+# git-cliff configuration: https://git-cliff.org/docs/configuration
+# Used by .github/workflows/release-tag.yml to build release notes from
+# conventional commits (types match internal/lint-configs/commitlint-config).
+
+[changelog]
+header = """
+# Changelog\n
+"""
+body = """
+{% if version %}\
+    ## {{ version }} - {{ timestamp | date(format="%Y-%m-%d") }}
+{% else %}\
+    ## Unreleased
+{% endif %}\
+{% for group, commits in commits | group_by(attribute="group") %}
+    ### {{ group | striptags | trim | upper_first }}
+    {% for commit in commits %}
+        - {% if commit.scope %}**{{ commit.scope }}:** {% endif %}\
+            {% if commit.breaking %}[**breaking**] {% endif %}\
+            {{ commit.message | upper_first }} ({{ commit.id | truncate(length=7, end="") }})\
+    {% endfor %}
+{% endfor %}\n
+"""
+trim = true
+footer = ""
+
+[git]
+conventional_commits = true
+filter_unconventional = true
+split_commits = false
+protect_breaking_commits = true
+# drop commits that don't match any commit_parsers entry (unknown types)
+filter_commits = true
+tag_pattern = "v[0-9].*"
+sort_commits = "oldest"
+commit_parsers = [
+  { message = "^feat", group = "<!-- 0 -->🚀 Features" },
+  { message = "^fix", group = "<!-- 1 -->🐞 Bug Fixes" },
+  { message = "^perf", group = "<!-- 2 -->📈 Performance" },
+  { message = "^refactor", group = "<!-- 3 -->♻️ Refactor" },
+  { message = "^docs", group = "<!-- 4 -->📝 Documentation" },
+  { message = "^style", group = "<!-- 5 -->🎨 Styling" },
+  { message = "^test", group = "<!-- 6 -->🚦 Tests" },
+  { message = "^types", group = "<!-- 7 -->🏷️ Types" },
+  { message = "^revert", group = "<!-- 8 -->⏪ Reverts" },
+  { message = "^release", skip = true },
+  { message = "^chore\\(release\\)", skip = true },
+  { message = "^(build|ci|chore)", group = "<!-- 9 -->👻 Maintenance" },
+]

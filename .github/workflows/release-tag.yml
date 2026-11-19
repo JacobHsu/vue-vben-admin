@@ -17,7 +17,6 @@ permissions:
 jobs:
   release:
     name: Create Release
-    if: github.repository == 'vbenjs/vue-vben-admin'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -25,26 +24,45 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Extract version
+      - name: Resolve tag
         id: version
+        env:
+          INPUT_TAG: ${{ inputs.tag }}
         run: |
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            raw_tag="${{ inputs.tag }}"
+          if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]]; then
+            raw_tag="${INPUT_TAG}"
           else
             raw_tag="${GITHUB_REF_NAME}"
           fi
           # Normalize: ensure v prefix
           tag="${raw_tag}"
           [[ "${tag:0:1}" != "v" ]] && tag="v${tag}"
-          version="${tag#v}"
-          major="${version%%.*}"
           echo "tag=${tag}" >> "${GITHUB_OUTPUT}"
-          echo "version=${version}" >> "${GITHUB_OUTPUT}"
-          echo "major=${major}" >> "${GITHUB_OUTPUT}"
 
-      - uses: release-drafter/release-drafter@v7
+          # Tag already exists (tag push) -> notes for that tag;
+          # otherwise (manual run with a new tag) -> unreleased commits labelled as the new tag.
+          if git rev-parse -q --verify "refs/tags/${tag}" > /dev/null; then
+            echo "cliff_args=--latest --strip header" >> "${GITHUB_OUTPUT}"
+          else
+            echo "cliff_args=--unreleased --tag ${tag} --strip header" >> "${GITHUB_OUTPUT}"
+          fi
+
+      # Release notes are generated from conventional commits (see cliff.toml),
+      # since this repo does not use pull requests.
+      - name: Generate release notes
+        uses: orhun/git-cliff-action@v4
         with:
-          version: ${{ steps.version.outputs.version }}
-          publish: true
+          config: cliff.toml
+          args: ${{ steps.version.outputs.cliff_args }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OUTPUT: RELEASE_NOTES.md
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          gh release create "${TAG}" \
+            --title "${TAG}" \
+            --notes-file RELEASE_NOTES.md \
+            --target "${GITHUB_SHA}"
