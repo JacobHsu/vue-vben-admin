@@ -13,30 +13,12 @@
     },
     {
       "type": "chrome",
-      "name": "vben admin antd dev",
+      "name": "vben admin antdv-next dev",
       "request": "launch",
-      "url": "http://localhost:5666",
+      "url": "http://localhost:5999",
       "env": { "NODE_ENV": "development" },
       "sourceMaps": true,
-      "webRoot": "${workspaceFolder}/apps/web-antd"
-    },
-    {
-      "type": "chrome",
-      "name": "vben admin ele dev",
-      "request": "launch",
-      "url": "http://localhost:5777",
-      "env": { "NODE_ENV": "development" },
-      "sourceMaps": true,
-      "webRoot": "${workspaceFolder}/apps/web-ele"
-    },
-    {
-      "type": "chrome",
-      "name": "vben admin naive dev",
-      "request": "launch",
-      "url": "http://localhost:5888",
-      "env": { "NODE_ENV": "development" },
-      "sourceMaps": true,
-      "webRoot": "${workspaceFolder}/apps/web-naive"
+      "webRoot": "${workspaceFolder}/apps/web-antdv-next"
     }
   ]
 }
