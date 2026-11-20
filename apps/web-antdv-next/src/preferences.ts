@@ -13,5 +13,9 @@ export const overridesPreferences = defineOverridesPreferences({
   app: {
     name: import.meta.env.VITE_APP_TITLE,
   },
-  copyright: appCopyrightPreferences,
+  copyright: {
+    ...appCopyrightPreferences,
+    // 隱藏登入頁底部的版權列（上游的 ICP 備案號與公司名稱）
+    enable: false,
+  },
 });
