@@ -10,7 +10,6 @@ const oxlintIgnorePatterns: string[] = [
   '**/dist/**',
   '**/node_modules/**',
   'docs/**',
-  'playground/public/**',
   '**/*.json',
   '**/*.md',
   '**/*.svg',
