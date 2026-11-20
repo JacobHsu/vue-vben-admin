@@ -23,6 +23,7 @@ import {
 } from 'vxe-pc-ui';
 import enUS from 'vxe-pc-ui/es/language/en-US'; // 导入默认的语言
 import zhCN from 'vxe-pc-ui/es/language/zh-CN';
+import zhTW from 'vxe-pc-ui/es/language/zh-TW';
 import {
   VxeColgroup,
   VxeColumn,
@@ -127,6 +128,7 @@ export function setupVbenVxeTable(setupOptions: SetupVxeTable) {
 
   const localMap: Partial<Record<SupportedLanguagesType, any>> = {
     'zh-CN': normalizeVxeLocale(zhCN),
+    'zh-TW': normalizeVxeLocale(zhTW),
     'en-US': normalizeVxeLocale(enUS),
   };
 

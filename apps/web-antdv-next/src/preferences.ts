@@ -11,6 +11,8 @@ import {
 export const overridesPreferences = defineOverridesPreferences({
   // overrides
   app: {
+    // 預設語言：繁體中文
+    locale: 'zh-TW',
     name: import.meta.env.VITE_APP_TITLE,
   },
   copyright: {

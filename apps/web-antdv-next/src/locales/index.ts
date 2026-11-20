@@ -14,7 +14,8 @@ import {
 import { preferences } from '@vben/preferences';
 
 import antdEnLocale from 'antdv-next/dist/locale/en_US';
-import antdDefaultLocale from 'antdv-next/dist/locale/zh_CN';
+import antdZhCnLocale from 'antdv-next/dist/locale/zh_CN';
+import antdDefaultLocale from 'antdv-next/dist/locale/zh_TW';
 import dayjs from 'dayjs';
 
 const antdLocale = ref<Locale>(antdDefaultLocale);
@@ -61,6 +62,10 @@ async function loadDayjsLocale(lang: SupportedLanguagesType) {
       locale = await import('dayjs/locale/zh-cn');
       break;
     }
+    case 'zh-TW': {
+      locale = await import('dayjs/locale/zh-tw');
+      break;
+    }
     // 默认使用英语
     default: {
       locale = await import('dayjs/locale/en');
@@ -84,6 +89,10 @@ async function loadAntdLocale(lang: SupportedLanguagesType) {
       break;
     }
     case 'zh-CN': {
+      antdLocale.value = antdZhCnLocale;
+      break;
+    }
+    case 'zh-TW': {
       antdLocale.value = antdDefaultLocale;
       break;
     }
