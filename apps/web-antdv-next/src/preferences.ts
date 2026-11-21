@@ -11,6 +11,10 @@ import {
 export const overridesPreferences = defineOverridesPreferences({
   // overrides
   app: {
+    // 預設頭像（放在 overrides 才不會被 localStorage 快取蓋掉）
+    defaultAvatar: '/maneki-neko.png',
+    // 登入後預設首頁；使用者資料若帶 homePath 則以 homePath 優先
+    defaultHomePath: '/twstock/histock',
     // 預設語言：繁體中文
     locale: 'zh-TW',
     name: import.meta.env.VITE_APP_TITLE,

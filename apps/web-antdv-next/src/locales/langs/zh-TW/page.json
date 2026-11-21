@@ -11,5 +11,23 @@
     "title": "概覽",
     "analytics": "分析頁",
     "workspace": "工作台"
+  },
+  "twstock": {
+    "title": "台股"
+  },
+  "stock": {
+    "title": "美股"
+  },
+  "crypto": {
+    "title": "加密貨幣"
+  },
+  "source": {
+    "title": "開源"
+  },
+  "tools": {
+    "title": "工具"
+  },
+  "commodities": {
+    "title": "大宗商品"
   }
 }

@@ -22,7 +22,54 @@ import { $t } from '#/locales';
 import { useAuthStore } from '#/store';
 import LoginForm from '#/views/_core/authentication/login.vue';
 
+const APP_GITHUB_URL = 'https://github.com/JacobHsu/vue-vben-admin';
+
 const notifications = ref<NotificationItem[]>([
+  {
+    id: 101,
+    avatar: 'https://avatar.vercel.sh/1',
+    date: '剛剛',
+    isRead: false,
+    message: 'Stock Screener',
+    title: 'FINVIZ.com World',
+    link: 'https://finviz.com/map.ashx?t=geo',
+  },
+  {
+    id: 102,
+    avatar: 'https://www.dianomi.com/img/a/sav2/222436/9/110x70.jpg',
+    date: '剛剛',
+    isRead: false,
+    message: 'Politicians',
+    title: 'Perplexity Finance',
+    link: 'https://www.perplexity.ai/finance/politicians/18f9fc95-4661-444e-99f5-99d3778e0c31',
+  },
+  {
+    id: 103,
+    avatar: 'https://www.macromicro.me/img/etf/intro.png',
+    date: '剛剛',
+    isRead: false,
+    message: 'ETF Screener',
+    title: 'Macromicro ETF US',
+    link: 'https://www.macromicro.me/etf/us/screener',
+  },
+  {
+    id: 104,
+    avatar: 'https://cryptowatch.net/images/darkLogo.png',
+    date: '剛剛',
+    isRead: false,
+    message: 'Multiple TradingView Charts in 1 Screen',
+    title: 'CryptoWatch',
+    link: 'https://cryptowatch.net/',
+  },
+  {
+    id: 105,
+    avatar: 'https://avatar.vercel.sh/2',
+    date: '剛剛',
+    isRead: false,
+    message: 'Google Finance beta',
+    title: 'Google Finance',
+    link: 'https://www.google.com/finance/beta/',
+  },
   {
     id: 1,
     avatar: 'https://avatar.vercel.sh/vercel.svg?text=VB',
@@ -92,6 +139,15 @@ const menus = computed(() => [
     },
     icon: 'lucide:user',
     text: $t('page.auth.profile'),
+  },
+  {
+    handler: () => {
+      openWindow(APP_GITHUB_URL, {
+        target: '_blank',
+      });
+    },
+    icon: SvgGithubIcon,
+    text: 'JacobHsu/vue-vben-admin',
   },
   {
     handler: () => {

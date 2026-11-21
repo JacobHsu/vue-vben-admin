@@ -11,5 +11,23 @@
     "title": "Dashboard",
     "analytics": "Analytics",
     "workspace": "Workspace"
+  },
+  "twstock": {
+    "title": "TW Stock"
+  },
+  "stock": {
+    "title": "US Stock"
+  },
+  "crypto": {
+    "title": "Crypto"
+  },
+  "source": {
+    "title": "Source"
+  },
+  "tools": {
+    "title": "Tools"
+  },
+  "commodities": {
+    "title": "Commodities"
   }
 }

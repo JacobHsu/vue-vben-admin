@@ -2,7 +2,7 @@
 import type { VbenFormSchema } from '@vben/common-ui';
 import type { BasicOption } from '@vben/types';
 
-import { computed, markRaw } from 'vue';
+import { computed, markRaw, onMounted, ref } from 'vue';
 
 import { AuthenticationLogin, SliderCaptcha, z } from '@vben/common-ui';
 import { $t } from '@vben/locales';
@@ -12,6 +12,7 @@ import { useAuthStore } from '#/store';
 defineOptions({ name: 'Login' });
 
 const authStore = useAuthStore();
+const loginRef = ref<InstanceType<typeof AuthenticationLogin>>();
 
 const MOCK_USER_OPTIONS: BasicOption[] = [
   {
@@ -87,10 +88,20 @@ const formSchema = computed((): VbenFormSchema[] => {
     },
   ];
 });
+
+// 進入登入頁時自動帶入 admin 帳密，只需完成滑塊驗證
+onMounted(() => {
+  loginRef.value?.getFormApi()?.setValues({
+    password: '123456',
+    selectAccount: 'admin',
+    username: 'admin',
+  });
+});
 </script>
 
 <template>
   <AuthenticationLogin
+    ref="loginRef"
     :form-schema="formSchema"
     :loading="authStore.loginLoading"
     :show-code-login="false"
