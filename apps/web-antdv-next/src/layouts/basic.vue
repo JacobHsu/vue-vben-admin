@@ -109,7 +109,7 @@ const notifications = ref<NotificationItem[]>([
     isRead: false,
     message: '描述信息描述信息描述信息',
     title: '跳转Workspace示例',
-    link: '/workspace',
+    link: '/dashboard/workspace',
   },
   {
     id: 6,

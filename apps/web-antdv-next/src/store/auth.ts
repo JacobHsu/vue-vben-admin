@@ -12,6 +12,7 @@ import { defineStore } from 'pinia';
 
 import { getAccessCodesApi, getUserInfoApi, loginApi, logoutApi } from '#/api';
 import { $t } from '#/locales';
+import { resolveHomePath } from '#/router/home-path';
 
 export const useAuthStore = defineStore('auth', () => {
   const accessStore = useAccessStore();
@@ -56,7 +57,13 @@ export const useAuthStore = defineStore('auth', () => {
           onSuccess
             ? await onSuccess?.()
             : await router.push(
-                userInfo.homePath || preferences.app.defaultHomePath,
+                // 動態路由尚未生成時，有效的 homePath 也會先退回預設首頁，
+                // 再由路由守衛在生成路由後改導向 homePath
+                resolveHomePath(
+                  router,
+                  userInfo.homePath,
+                  preferences.app.defaultHomePath,
+                ),
               );
         }
 
